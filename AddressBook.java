@@ -1,20 +1,22 @@
 package com.company;
 import java.util.*;
 import java.lang.*;
-public class AddressBook {
-    public static void main(String args[]) {
-        HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+ class AddressBook
+{
+    public static void main(String args[])
+    {
         System.out.println("Welcome to Address Book");
-        Operation object=new Operation();
+        Driver object=new Driver();
         Scanner input = new Scanner(System.in);
-        while (true) {
+        while (true)
+	 {
             System.out.println("Enter 1 to create address");
             System.out.println("Enter 2 to edit details of person ");
             System.out.println("Enter 3 to delete person");
             System.out.println("Enter 4 to sort by First Name");
-            System.out.println("Enter 5 to sort by zipcode");
 
-            switch (input.nextInt()) {
+            switch (input.nextInt())
+	    {
                 case 1:
                     object.createAddress();
                     break;
@@ -35,7 +37,7 @@ public class AddressBook {
 
     }
 }
-class Operation
+class Driver implements ManagerDAO
 {
     HashMap<String,ArrayList<String>> map = new HashMap<String,ArrayList<String>>();
     Scanner input=new Scanner(System.in);
@@ -58,56 +60,62 @@ class Operation
         System.out.println("Enter phoneNumber code");
         list.add(input.nextLine());
         map.put(firstName,list);
-        System.out.println(map);
+        for (Map.Entry<String, ArrayList<String>> entry : map.entrySet())
+        {
+		System.out.println(entry);
+        }
 
     }
- 	public void editAddress()
-    	{
-		ArrayList<String> list = new ArrayList<String>();
-        	System.out.println("Enter name whose address you want to edit");
-        	String name=input.nextLine();
-		System.out.println("enter what you want to edit");
-		String edit=input.nextLine();
-		System.out.println("Enter final change you want");
-		String finalValue=input.nextLine();list.add(finalValue);
+    public void editAddress()
+    {
+        System.out.println("Enter name whose address you want to edit");
+        String name=input.nextLine();
+	System.out.println("enter what you want to edit");
+	String edit=input.nextLine();
+	System.out.println("Enter final change you want");
+	String finalValue=input.nextLine();
+        for (Map.Entry<String, ArrayList<String>> entry : map.entrySet())
+        {
+            if(entry.getKey().equals(name))
+            {
+		 ArrayList<String> list=entry.getValue();
+		if(list.contains(edit))
+		{
+			list.remove(edit);
+			list.add(finalValue);
+	        }
+             map.put(name,list);System.out.println(map);break;
+            }
+            else
+            {
+                System.out.println("sorry Name do not exist in AddressBook");
+            }
+        }
+    }
+    public void deleteAddress()
+    {
+	try
+	{
+        	System.out.println("Enter name whose address you want to delete");
+       		String name=input.nextLine();
         	for(Map.Entry entry:map.entrySet())
         	{
             		if(map.containsKey(name))
             		{
-                		map.replace(name,list);
+                		map.remove(name);
                 		System.out.println(map);
             		}
-            		else
-            		{
-                		System.out.println("sorry Name do not exist in AddressBook");
-            		}
+           		 else
+          		 {
+                 		System.out.println("sorry Name do not exist in AddressBook");
+            		 }
         	}
-    	}
-	public void deleteAddress()
-	{
-		try
-		{
-        		System.out.println("Enter name whose address you want to delete");
-        		String name=input.nextLine();
-        		for(Map.Entry entry:map.entrySet())
-        		{
-            			if(map.containsKey(name))
-            			{
-                			map.remove(name);
-                			System.out.println(map);
-            			}
-            			else
-            			{
-                			System.out.println("sorry Name do not exist in AddressBook");
-            			}
-        		}
-		}
-		catch(Exception e)
-		{
-
-		}
 	}
-	public void sortByFirstName()
+	catch(Exception e)
+	{
+	}
+    }
+    public void sortByFirstName()
 	{
         	// TreeMap to store values of HashMap
         	TreeMap<String, ArrayList<String>> sorted = new TreeMap<>();
@@ -115,9 +123,19 @@ class Operation
         	sorted.putAll(map);
         	// Display the TreeMap which is naturally sorted
         	map.putAll(sorted);
-        	System.out.println(sorted);
- 	}
-
+        	for (Map.Entry<String, ArrayList<String>> entry : sorted.entrySet())
+         	{
+			 System.out.println(entry);
+        	}
+    	 }
 
 }
+interface ManagerDAO
+{
+	abstract void createAddress();
+	abstract void editAddress();
+	abstract void deleteAddress();
+	abstract void sortByFirstName();
+}
+
 
